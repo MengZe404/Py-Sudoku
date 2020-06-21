@@ -32,6 +32,8 @@ font = pygame.font.Font('freesansbold.ttf', 28)
 title_font = pygame.font.Font('freesansbold.ttf', 38)
 sub_font = pygame.font.Font('freesansbold.ttf', 14)
 
+starting_time = time.time()
+
 # Game asset, downloaded from - https://www.pinterest.com/pin/153263193544481131/
 table = pygame.image.load("table.jpg")
 
@@ -64,6 +66,13 @@ class Number(object):
     def draw(self):  
         self.win.blit(self.text, (square_length * self.x + 20, square_length * self.y + 20))
 
+class Time(object):
+    def __init__(self, win):
+        self.win = win
+        timer = font.render("Time: {}".format(round(time.time() - starting_time, 2)), True, (0,0,0))
+        pygame.draw.rect(self.win, (255,255, 255), (square_length * 9 + 20, 250, 200, 100))
+        self.win.blit(timer, (square_length * 9 + 20, 300))
+        
 grid = np.empty(shape = [9,9], dtype = Square)
 
 # Load the template stored in .txt file
@@ -163,7 +172,12 @@ def main():
 #### Main loop
     run = True
     while run:
-        clock.tick(20)
+        clock.tick(30)
+
+        timer = [0]
+        
+        if number_grid != answer_grid:
+            timer[0] = Time(win)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
