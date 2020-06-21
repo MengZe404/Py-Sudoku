@@ -52,14 +52,14 @@ class Square(object):
 
 # Create number (text) objects that display on the game interface
 class Number(object):
-    def __init__(self, win, num, x, y):
+    def __init__(self, win, num, x, y, color):
         self.win = win
         self.num = num
         self.x = x
         self.y = y
         self.text = None
-
-        self.text = font.render('{}'.format(num), True, (0,0,0))
+        self.color = color
+        self.text = font.render('{}'.format(num), True, color)
 
     def draw(self):  
         self.win.blit(self.text, (square_length * self.x + 20, square_length * self.y + 20))
@@ -120,12 +120,12 @@ def generate():
         answer_grid[row - 9 * puzzle_index] = answer[row][0].split(' ')
 
 # Uptdae the grid
-def update(win, num, row, col):
+def update(win, num, row, col, color = (0,0,0)):
     if num == '0':
         pass
     else:
         number_grid[row][col] = num
-        number[row][col] = Number(win, num, col, row)
+        number[row][col] = Number(win, num, col, row, color)
         grid[row][col] = Square(win, col, row, (row, col))
 
 # The main game
@@ -158,7 +158,7 @@ def main():
     for row in range(0, 9):
         for col in range(0, 9):
             grid[row][col] = Square(win, col, row, (row, col))
-            update(win, number_grid[row][col], row, col)
+            update(win, number_grid[row][col], row, col, (0,0,255))
                               
 #### Main loop
     run = True
@@ -189,10 +189,11 @@ def main():
             win.blit(new, (square_length * 9 + 30, 350))
             if keys[pygame.K_n]:
                 generate()
+                main()
                 for row in range(0, 9):
                     for col in range(0, 9):
                         grid[row][col] = Square(win, col, row, (row, col))
-                        update(win, number_grid[row][col], row, col)
+                        update(win, number_grid[row][col], row, col, color=(0,0,255))
 
         for row in range(0, 9):
             for col in range(0, 9):
@@ -219,8 +220,7 @@ def main():
                     elif keys[pygame.K_9]:
                         update(win, 9, row, col)
                     elif keys[pygame.K_0] or keys[pygame.K_ESCAPE]:
-                        number_grid[row][col] = None
-                        number[row][col] = None 
+                        update(win, '', row, col) 
                            
         # Display everything
         pygame.display.flip()
