@@ -243,4 +243,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+    print(number_grid, '\n',answer_grid)
